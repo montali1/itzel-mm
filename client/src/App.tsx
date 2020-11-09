@@ -11,13 +11,23 @@ import EditPost from './components/Post/EditPost';
 
 class App extends React.Component {
   state = {
-    posts: [],
-    post: null,
+    //posts: [],
+    data: null,
     token: null,
     user: null
   };
 
   componentDidMount() {
+    axios.get('http://localhost:5000')
+    .then((response) => {
+      this.setState({
+        data: response.data
+      })
+    })
+    .catch((error) => {
+      console.error(`Error fetching data: ${error}`);
+    })
+
     this.authenticateUser();
   }
 
@@ -35,8 +45,7 @@ class App extends React.Component {
           'x-auth-token': token
         }
       };
-      axios
-        .get('/api/auth', config)
+      axios.get('http://localhost:5000/api/auth', config)
         .then(response => {
           localStorage.setItem('user', response.data.name);
           this.setState(
@@ -143,7 +152,7 @@ class App extends React.Component {
   };
 
   render() {
-    let { user, posts, post, token } = this.state;
+    let { user, data, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -158,11 +167,7 @@ class App extends React.Component {
                 <Link to="/">Home</Link>
               </li>
               <li>
-                {user ? (
                   <Link to="/new-post">Register</Link>
-                ) : (
-                  <Link to="/register">login</Link>
-                )}
               </li>
               <li>
                 {user ? (
@@ -176,23 +181,21 @@ class App extends React.Component {
             </ul>
           </header>
           <main>
-            <Switch>
               <Route exact path="/">
-                {user ? (
+                {user ? 
                   <React.Fragment>
                     <div>Hello {user}!</div>
-                    <PostList
-                      posts={posts}
-                      clickPost={this.viewPost}
-                      deletePost={this.deletePost}
-                      editPost={this.editPost}
-                    />
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>Please Register or Login</React.Fragment>
-                )}
+                    <div>{data}</div>
+                  </React.Fragment> :
+                  <React.Fragment>
+                    Please Register or Login
+                    </React.Fragment>
+                }
+
               </Route>
-              <Route path="/posts/:postId">
+              <Switch>
+              <Route 
+              exact path="/posts/:postId">
                 <Post post={post} />
               </Route>
               <Route path="/new-post">
