@@ -159,9 +159,9 @@ class App extends React.Component {
               </li>
               <li>
                 {user ? (
-                  <Link to="/new-post">New Post</Link>
+                  <Link to="/new-post">Register</Link>
                 ) : (
-                  <Link to="/register">Register</Link>
+                  <Link to="/register">login</Link>
                 )}
               </li>
               <li>
