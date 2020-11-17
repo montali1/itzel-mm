@@ -228,10 +228,10 @@ app.get('/api/posts/:id', auth, async (req, res) => {
     }
 
     res.json(post);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
-  }
+  } catch (error){
+  console.error(error);
+  res.status(500).send('Server error');
+}
 });
 
 /**
