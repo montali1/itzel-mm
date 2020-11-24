@@ -11,8 +11,8 @@ import EditPost from './components/Post/EditPost';
 
 class App extends React.Component {
   state = {
-    //posts: [],
-    data: null,
+    posts: [],
+    post: null,
     token: null,
     user: null
   };
@@ -76,7 +76,7 @@ class App extends React.Component {
         }
       };
       axios
-        .get('/api/posts', config)
+        .get('http://localhost:5000/api/posts', config)
         .then(response => {
           this.setState({
             posts: response.data
@@ -152,7 +152,7 @@ class App extends React.Component {
   };
 
   render() {
-    let { user, data, token } = this.state;
+    let { user, posts, post, token } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     };
@@ -181,21 +181,23 @@ class App extends React.Component {
             </ul>
           </header>
           <main>
-              <Route exact path="/">
-                {user ? 
-                  <React.Fragment>
-                    <div>Hello {user}!</div>
-                    <div>{data}</div>
-                  </React.Fragment> :
-                  <React.Fragment>
-                    Please Register or Login
-                    </React.Fragment>
-                }
-
-              </Route>
               <Switch>
-              <Route 
-              exact path="/posts/:postId">
+                <Route exact path="/">
+                  {user ? (
+                    <React.Fragment>
+                      <div>Hello {user}!</div>
+                      <PostList 
+                      posts={posts} 
+                      clickPost={this.viewPost}
+                      deletePost={this.deletePost}
+                      editPost={this.editPost}
+                      />
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>Please register or login</React.Fragment>
+                  )}
+                </Route>
+              <Route path="/posts/:postId">
                 <Post post={post} />
               </Route>
               <Route path="/new-post">
@@ -203,9 +205,9 @@ class App extends React.Component {
               </Route>
               <Route path="/edit-post/:postId">
                 <EditPost
-                  token={token}
-                  post={post}
-                  onPostUpdated={this.onPostUpdated}
+                token={token}
+                post={post}
+                onPostUpdated={this.onPostUpdated}
                 />
               </Route>
               <Route

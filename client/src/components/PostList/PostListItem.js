@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import './styles.css';
 
 const PostListItem = props => {
-  const { post, clickPost, deletePost, editPost } = props;
+  const { post, clickPost /*deletePost, editPost*/ } = props;
   const history = useHistory();
 
   const handleClickPost = post => {
